@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        /* ===== جميع أنماط CSS كما هي ===== */
+        /* ===== جميع الأنماط كما هي (لم تتغير) ===== */
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Tajawal',sans-serif; background:linear-gradient(145deg,#e0eef9,#f4faff); min-height:100vh; padding:18px 22px; color:#1a2a3a; position:relative; display:flex; justify-content:center; align-items:center; }
         body::before { content:''; position:fixed; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle at 20% 30%,rgba(60,190,255,0.10) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(100,210,255,0.08) 0%,transparent 45%),radial-gradient(circle at 50% 50%,rgba(180,230,255,0.05) 0%,transparent 55%); animation:glowMove 18s ease-in-out infinite alternate; z-index:0; pointer-events:none; }
@@ -117,6 +117,7 @@
 <body>
 
 <div class="container" id="app">
+    <!-- ===== HEADER ===== -->
     <div class="invoice-header">
         <div class="header-left">
             <img src="https://alshblan.sa/wp-content/uploads/2025/03/musaned-logo.png" alt="شعار مساند" class="logo-img" />
@@ -129,32 +130,38 @@
         </div>
     </div>
 
+    <!-- ===== COUNTDOWN ===== -->
     <div class="countdown-section">
         <div class="label"><i class="fas fa-hourglass-half"></i> العداد التنازلي <i class="fas fa-clock"></i></div>
         <div class="timer"><i class="fas fa-hourglass-start"></i> <span id="timerTextBig">01:00:00</span></div>
     </div>
 
+    <!-- ===== CLIENT INFO ===== -->
     <div class="client-card">
         <div class="item"><span class="label"><i class="fas fa-user"></i> اسم صاحب الطلب</span><span class="value" id="clientNameDisplay">عبد الملك بن عيسى الشمري</span></div>
         <div class="item"><span class="label"><i class="fas fa-mobile-alt"></i> رقم الجوال</span><span class="value" id="clientMobileDisplay">0501234567</span></div>
         <div class="item"><span class="label"><i class="fas fa-id-card"></i> رقم الهوية</span><span class="value" id="clientIdDisplay">1029179353</span></div>
     </div>
 
+    <!-- ===== CONTRACT INFO ===== -->
     <div class="contract-card">
         <div class="item"><span class="label"><i class="fas fa-file-signature"></i> نوع العقد</span><span class="value" id="contractDurationDisplay">شهر</span></div>
         <div class="item"><span class="label"><i class="fas fa-flag"></i> الجنسية</span><span class="value" id="nationalityDisplay">سعودي</span></div>
         <div class="item"><span class="label"><i class="fas fa-globe"></i> دولة الاستخدام</span><span class="value" id="countryDisplay">المملكة العربية السعودية</span></div>
     </div>
 
+    <!-- ===== PAYMENT + QR (معدل) ===== -->
     <div class="payment-qr-wrapper">
         <div class="payment-info">
             <div class="row"><span class="label"><i class="fas fa-file-invoice"></i> رقم المفوتر:</span><span class="value" id="invoicerNumberDisplay">INV-2026-0916</span></div>
             <div class="row"><span class="label"><i class="fas fa-barcode"></i> رقم سداد الفاتورة:</span><span class="value" id="paymentCodeDisplay">9700169092160018</span><span class="due-badge"><i class="fas fa-check-circle"></i> مستحقه</span></div>
             <div class="note-row"><i class="fas fa-clock"></i> <span id="paymentNoteDisplay">ملاحظة: رجاء التسديد قبل انتهاء الوقت</span></div>
         </div>
+
+        <!-- الباركود المعدل -->
         <div class="qr-box">
             <div class="qr-label"><i class="fas fa-qrcode"></i> رمز الاستجابة السريعة</div>
-            <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=INV-2026-0916-0018" alt="QR Code" />
+            <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=رقم%20المفوتر%3A%20INV-2026-0916%0Aرقم%20السداد%3A%209700169092160018" alt="QR Code" />
             <div class="qr-info">
                 <div>📄 رقم المفوتر: <span id="qrInvoicerDisplay">INV-2026-0916</span></div>
                 <div>💳 رقم السداد: <span id="qrPaymentCodeDisplay">9700169092160018</span></div>
@@ -162,6 +169,7 @@
         </div>
     </div>
 
+    <!-- ===== TABLE ===== -->
     <div class="table-wrap">
         <table>
             <thead><tr><th style="font-size:0.95rem;">تفصيل الفاتورة</th><th style="text-align:left; font-size:0.95rem;">المبلغ (ريال سعودي)</th></tr></thead>
@@ -173,6 +181,7 @@
         </table>
     </div>
 
+    <!-- ===== PAY SECTION ===== -->
     <div class="pay-section">
         <button class="btn-pay-fee" id="payFeeBtn"><i class="fas fa-credit-card"></i> ادفع الآن</button>
         <div class="circles-group">
@@ -182,23 +191,25 @@
         </div>
     </div>
 
+    <!-- ===== LICENSE ===== -->
     <div class="license-section">
         <div class="license-text"><i class="fas fa-certificate"></i> رقم ترخيص مساند: <span class="num" id="licenseNumberDisplay">MS-2026-0916-0018</span> <i class="fas fa-check-circle" style="color:#0b7b3e;"></i> <span style="color:#0b7b3e; font-weight:600;">معتمد</span></div>
         <div class="sub-text"><i class="fas fa-info-circle"></i> هذا العقد موثق من قبل منصة مساند وفق الأنظمة واللوائح المعتمدة في المملكة العربية السعودية.</div>
     </div>
 
+    <!-- ===== FOOTER ===== -->
     <div class="footer-actions">
         <button class="btn-footer btn-dashboard-footer" id="dashboardBtnFooter"><i class="fas fa-cogs"></i> لوحة التحكم</button>
         <button class="btn-footer btn-pdf-footer" id="pdfBtn"><i class="fas fa-file-pdf"></i> تحميل الفاتورة</button>
     </div>
 </div>
 
-<!-- ===== مودال الدفع ===== -->
+<!-- ===== PAYMENT MODAL ===== -->
 <div class="modal-overlay" id="paymentModal">
     <div class="modal-box">
         <h2><i class="fas fa-check-circle"></i> تأكيد الدفع</h2>
         <div class="modal-countdown"><i class="fas fa-hourglass-start"></i> <span id="modalTimerText">01:00:00</span></div>
-        <div class="modal-qr"><img id="modalQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=INV-2026-0916-0018" alt="QR Code" /></div>
+        <div class="modal-qr"><img id="modalQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=رقم%20المفوتر%3A%20INV-2026-0916%0Aرقم%20السداد%3A%209700169092160018" alt="QR Code" /></div>
         <div class="modal-row"><span class="label">اسم صاحب الطلب:</span><span class="value" id="modalClientName">عبد الملك بن عيسى الشمري</span></div>
         <div class="modal-row"><span class="label">رقم السداد:</span><span class="value" id="modalPaymentCode">9700169092160018</span></div>
         <div class="modal-row"><span class="label">رقم المفوتر:</span><span class="value" id="modalInvoicerNumber">INV-2026-0916</span></div>
@@ -208,7 +219,7 @@
     </div>
 </div>
 
-<!-- ===== توست ===== -->
+<!-- ===== TOAST ===== -->
 <div class="toast-overlay" id="toastOverlay">
     <div class="toast-box"><i class="fas fa-check-circle"></i> <span id="toastMessage">تم التعديل بنجاح</span></div>
 </div>
@@ -285,13 +296,21 @@
         return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
     }
 
-    function updateQrCode(data) {
+    // ===== دالة تحديث الباركود (معدلة) =====
+    function updateQrCode() {
+        const qrText = `رقم المفوتر: ${appData.invoicerNumber}\nرقم السداد: ${appData.paymentCode}`;
         const qrImg = document.getElementById('qrCodeImage');
-        if (qrImg && data) {
-            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(data)}`;
+        if (qrImg) {
+            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrText)}`;
         }
+        // تحديث النصوص أسفل الباركود
         document.getElementById('qrInvoicerDisplay').textContent = appData.invoicerNumber;
         document.getElementById('qrPaymentCodeDisplay').textContent = appData.paymentCode;
+        // تحديث صورة الباركود في المودال أيضاً
+        const modalQr = document.getElementById('modalQrImage');
+        if (modalQr) {
+            modalQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrText)}`;
+        }
     }
 
     // ============================================================
@@ -352,14 +371,13 @@
         document.getElementById('totalAmountDisplay').textContent = appData.totalAmount;
 
         updateTimerDisplay();
-        updateQrCode(appData.invoiceNumber);
+        updateQrCode(); // تحديث الباركود
 
         document.getElementById('modalClientName').textContent = appData.clientName;
         document.getElementById('modalPaymentCode').textContent = appData.paymentCode;
         document.getElementById('modalInvoicerNumber').textContent = appData.invoicerNumber;
         document.getElementById('modalTotalAmount').textContent = `${appData.totalAmount} ريال`;
         document.getElementById('modalTodayDate').textContent = new Date().toISOString().split('T')[0];
-        document.getElementById('modalQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(appData.invoiceNumber)}`;
 
         saveData();
     }
@@ -378,7 +396,9 @@
         document.getElementById('modalInvoicerNumber').textContent = appData.invoicerNumber;
         document.getElementById('modalTotalAmount').textContent = `${appData.totalAmount} ريال`;
         document.getElementById('modalTodayDate').textContent = new Date().toISOString().split('T')[0];
-        document.getElementById('modalQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(appData.invoiceNumber)}`;
+        // تحديث الباركود في المودال
+        const qrText = `رقم المفوتر: ${appData.invoicerNumber}\nرقم السداد: ${appData.paymentCode}`;
+        document.getElementById('modalQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrText)}`;
         document.getElementById('modalTimerText').textContent = formatTime(appData.countdownRemaining);
         paymentModal.classList.add('show');
     });
@@ -561,7 +581,7 @@
         }
     });
 
-    console.log('✅ فاتورة مساند — النسخة النهائية مع QR Code والمودال');
+    console.log('✅ فاتورة مساند — الباركود يحتوي على رقم المفوتر ورقم السداد');
     console.log('📋 البيانات محفوظة في localStorage:', STORAGE_KEY);
 </script>
 
