@@ -9,129 +9,39 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
+        /* ===== جميع أنماط CSS كما هي ===== */
         * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(145deg, #e0eef9 0%, #f4faff 100%);
-            min-height: 100vh;
-            padding: 18px 22px;
-            color: #1a2a3a;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background:
-                radial-gradient(circle at 20% 30%, rgba(60, 190, 255, 0.10) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(100, 210, 255, 0.08) 0%, transparent 45%),
-                radial-gradient(circle at 50% 50%, rgba(180, 230, 255, 0.05) 0%, transparent 55%);
-            animation: glowMove 18s ease-in-out infinite alternate;
-            z-index: 0;
-            pointer-events: none;
-        }
-        @keyframes glowMove {
-            0% { transform: translate(0,0) scale(1); opacity:0.7; }
-            50% { transform: translate(2%,-1%) scale(1.03); opacity:1; }
-            100% { transform: translate(-1%,1%) scale(0.97); opacity:0.8; }
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(ellipse at 40% 50%, rgba(255,255,255,0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 30%, rgba(200,235,255,0.08) 0%, transparent 40%);
-            animation: glowPulse 6s ease-in-out infinite alternate;
-            z-index: 0;
-            pointer-events: none;
-        }
-        @keyframes glowPulse {
-            0% { opacity:0.4; transform:scale(1); }
-            100% { opacity:0.9; transform:scale(1.05); }
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            width: 100%;
-            background: rgba(255,255,255,0.82);
-            backdrop-filter: blur(16px);
-            border-radius: 40px;
-            padding: 24px 36px 28px;
-            box-shadow: 0 30px 80px rgba(10,50,90,0.08), 0 10px 30px rgba(0,40,80,0.04);
-            border: 1px solid rgba(255,255,255,0.7);
-        }
-        .invoice-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 12px 20px;
-            padding-bottom: 14px;
-            border-bottom: 2px solid rgba(30,100,180,0.08);
-            margin-bottom: 14px;
-        }
+        body { font-family:'Tajawal',sans-serif; background:linear-gradient(145deg,#e0eef9,#f4faff); min-height:100vh; padding:18px 22px; color:#1a2a3a; position:relative; display:flex; justify-content:center; align-items:center; }
+        body::before { content:''; position:fixed; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle at 20% 30%,rgba(60,190,255,0.10) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(100,210,255,0.08) 0%,transparent 45%),radial-gradient(circle at 50% 50%,rgba(180,230,255,0.05) 0%,transparent 55%); animation:glowMove 18s ease-in-out infinite alternate; z-index:0; pointer-events:none; }
+        @keyframes glowMove { 0%{transform:translate(0,0) scale(1);opacity:0.7;} 50%{transform:translate(2%,-1%) scale(1.03);opacity:1;} 100%{transform:translate(-1%,1%) scale(0.97);opacity:0.8;} }
+        body::after { content:''; position:fixed; inset:0; background:radial-gradient(ellipse at 40% 50%,rgba(255,255,255,0.15) 0%,transparent 50%),radial-gradient(ellipse at 70% 30%,rgba(200,235,255,0.08) 0%,transparent 40%); animation:glowPulse 6s ease-in-out infinite alternate; z-index:0; pointer-events:none; }
+        @keyframes glowPulse { 0%{opacity:0.4;transform:scale(1);} 100%{opacity:0.9;transform:scale(1.05);} }
+        .container { position:relative; z-index:1; max-width:1200px; width:100%; background:rgba(255,255,255,0.82); backdrop-filter:blur(16px); border-radius:40px; padding:24px 36px 28px; box-shadow:0 30px 80px rgba(10,50,90,0.08),0 10px 30px rgba(0,40,80,0.04); border:1px solid rgba(255,255,255,0.7); }
+        .invoice-header { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px 20px; padding-bottom:14px; border-bottom:2px solid rgba(30,100,180,0.08); margin-bottom:14px; }
         .header-left { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
         .logo-img { height:68px; width:auto; border-radius:14px; background:#fff; padding:6px 12px; box-shadow:0 4px 16px rgba(0,0,0,0.04); object-fit:contain; border:1px solid rgba(30,100,180,0.06); }
         .invoice-number-badge { background:#e8f4fd; padding:4px 18px; border-radius:40px; border:1px solid rgba(42,139,176,0.12); font-weight:700; color:#0a3144; font-size:1rem; display:flex; align-items:center; gap:8px; }
         .invoice-number-badge i { color:#2a8bb0; }
-        .header-right-stacked {
-            display:flex; flex-direction:column; align-items:flex-end; gap:4px;
-            background:rgba(240,248,255,0.5); padding:8px 22px; border-radius:16px;
-            border:1px solid rgba(30,100,180,0.06); min-width:160px;
-        }
+        .header-right-stacked { display:flex; flex-direction:column; align-items:flex-end; gap:4px; background:rgba(240,248,255,0.5); padding:8px 22px; border-radius:16px; border:1px solid rgba(30,100,180,0.06); min-width:160px; }
         .header-right-stacked .info-item { display:flex; align-items:center; gap:6px; font-size:0.9rem; font-weight:500; }
         .header-right-stacked .info-item .label { color:#5a7a8a; font-weight:500; font-size:0.8rem; }
         .header-right-stacked .info-item .value { font-weight:700; color:#0a3144; direction:ltr; font-size:0.95rem; }
-
-        .countdown-section {
-            background:linear-gradient(135deg,#d4edff 0%,#e8f7ff 100%);
-            border-radius:20px; padding:10px 20px 12px; margin-bottom:14px;
-            text-align:center; border:1px solid rgba(255,255,255,0.7);
-            box-shadow:inset 0 2px 8px rgba(0,80,160,0.04), 0 4px 14px rgba(20,100,180,0.06);
-        }
+        .countdown-section { background:linear-gradient(135deg,#d4edff,#e8f7ff); border-radius:20px; padding:10px 20px 12px; margin-bottom:14px; text-align:center; border:1px solid rgba(255,255,255,0.7); box-shadow:inset 0 2px 8px rgba(0,80,160,0.04),0 4px 14px rgba(20,100,180,0.06); }
         .countdown-section .label { font-weight:700; font-size:0.9rem; color:#0a405a; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:2px; }
         .countdown-section .label i { color:#1d7bb3; }
         .countdown-section .timer { font-size:2.2rem; font-weight:800; color:#0a2b3f; letter-spacing:3px; font-variant-numeric:tabular-nums; direction:ltr; background:rgba(255,255,255,0.5); padding:2px 16px; border-radius:40px; display:inline-block; border:1px solid rgba(60,160,220,0.08); }
         .countdown-section .timer i { color:#1d7bb3; font-size:1.4rem; margin:0 6px; }
-
-        .client-card {
-            background:linear-gradient(135deg,#f8fcff,#f0f8fe);
-            border-radius:18px; padding:14px 24px; margin-bottom:12px;
-            border:1px solid rgba(42,139,176,0.06);
-            display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px 24px;
-            box-shadow:0 2px 12px rgba(0,0,0,0.01);
-        }
+        .client-card { background:linear-gradient(135deg,#f8fcff,#f0f8fe); border-radius:18px; padding:14px 24px; margin-bottom:12px; border:1px solid rgba(42,139,176,0.06); display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px 24px; box-shadow:0 2px 12px rgba(0,0,0,0.01); }
         .client-card .item { display:flex; flex-direction:column; gap:0px; }
         .client-card .item .label { font-weight:500; color:#5a7a8a; font-size:0.7rem; letter-spacing:0.2px; }
         .client-card .item .value { font-weight:700; color:#0a3144; font-size:0.9rem; }
-
-        .contract-card {
-            background:#f8fcff; border-radius:18px; padding:12px 24px; margin-bottom:12px;
-            border:1px solid rgba(42,139,176,0.06);
-            display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px 24px;
-        }
+        .contract-card { background:#f8fcff; border-radius:18px; padding:12px 24px; margin-bottom:12px; border:1px solid rgba(42,139,176,0.06); display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px 24px; }
         .contract-card .item { display:flex; flex-direction:column; gap:0px; }
         .contract-card .item .label { font-weight:500; color:#5a7a8a; font-size:0.7rem; letter-spacing:0.2px; }
         .contract-card .item .value { font-weight:700; color:#0a3144; font-size:0.9rem; }
-
-        .payment-qr-wrapper {
-            display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:12px;
-        }
+        .payment-qr-wrapper { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:12px; }
         @media (max-width:700px) { .payment-qr-wrapper { grid-template-columns:1fr; } }
-
-        .payment-info {
-            background:#f8fcff; border-radius:18px; padding:14px 22px;
-            border:1px solid rgba(42,139,176,0.06);
-            display:flex; flex-direction:column; gap:8px;
-        }
+        .payment-info { background:#f8fcff; border-radius:18px; padding:14px 22px; border:1px solid rgba(42,139,176,0.06); display:flex; flex-direction:column; gap:8px; }
         .payment-info .row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
         .payment-info .row .label { font-weight:600; color:#1a5276; font-size:0.8rem; }
         .payment-info .row .value { font-weight:700; color:#0a3144; font-size:1rem; direction:ltr; background:#fff; padding:2px 14px; border-radius:30px; border:1px solid rgba(42,139,176,0.06); }
@@ -139,28 +49,13 @@
         .payment-info .due-badge i { font-size:0.6rem; }
         .payment-info .note-row { font-size:0.8rem; color:#c0392b; font-weight:500; display:flex; align-items:center; gap:6px; border-top:1px dashed rgba(30,100,180,0.06); padding-top:8px; }
         .payment-info .note-row i { color:#d4a017; }
-
-        /* QR Code مع معلومات إضافية */
-        .qr-box {
-            background:#fff; border-radius:18px; padding:12px;
-            border:2px solid rgba(42,139,176,0.12);
-            box-shadow:0 4px 14px rgba(42,139,176,0.04);
-            display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
-            transition:0.3s;
-        }
+        .qr-box { background:#fff; border-radius:18px; padding:12px; border:2px solid rgba(42,139,176,0.12); box-shadow:0 4px 14px rgba(42,139,176,0.04); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:0.3s; }
         .qr-box:hover { box-shadow:0 8px 28px rgba(42,139,176,0.08); transform:translateY(-2px); }
         .qr-box .qr-label { font-weight:600; color:#1a5276; font-size:0.75rem; margin-bottom:4px; }
         .qr-box img { width:110px; height:110px; border-radius:12px; background:#fff; padding:4px; border:1px solid rgba(0,0,0,0.04); }
-        .qr-box .qr-info {
-            font-size:0.65rem; color:#1a5276; margin-top:6px; line-height:1.6;
-            background:#f0f8fe; padding:4px 12px; border-radius:12px; width:100%;
-        }
+        .qr-box .qr-info { font-size:0.65rem; color:#1a5276; margin-top:6px; line-height:1.6; background:#f0f8fe; padding:4px 12px; border-radius:12px; width:100%; }
         .qr-box .qr-info span { font-weight:700; color:#0a3144; }
-
-        .table-wrap {
-            overflow-x:auto; margin-bottom:14px; border-radius:16px;
-            border:1px solid rgba(30,100,180,0.06); box-shadow:0 2px 8px rgba(0,0,0,0.01);
-        }
+        .table-wrap { overflow-x:auto; margin-bottom:14px; border-radius:16px; border:1px solid rgba(30,100,180,0.06); box-shadow:0 2px 8px rgba(0,0,0,0.01); }
         table { width:100%; border-collapse:collapse; font-size:0.9rem; }
         table thead { background:linear-gradient(135deg,#e8f0f8,#dce8f2); }
         table th { padding:10px 18px; text-align:right; font-weight:700; color:#0a405a; font-size:0.8rem; border-bottom:2px solid rgba(30,100,180,0.08); }
@@ -168,176 +63,60 @@
         table tbody tr:last-child td { border-bottom:none; }
         table .total-row { font-weight:700; background:#f0f7fc; border-top:2px solid rgba(30,100,180,0.1); }
         table .total-row td { font-size:1rem; color:#0a3144; }
-
-        .pay-section {
-            display:flex; align-items:center; gap:24px; flex-wrap:wrap; margin:12px 0 14px;
-        }
-        .btn-pay-fee {
-            background:linear-gradient(135deg,#0b7b3e,#15a55a); color:#fff; border:none;
-            padding:14px 42px; border-radius:60px; font-family:'Tajawal',sans-serif;
-            font-weight:800; font-size:1.1rem; cursor:pointer; transition:all 0.3s ease;
-            display:inline-flex; align-items:center; gap:12px;
-            box-shadow:0 8px 28px rgba(11,123,62,0.25);
-        }
+        .pay-section { display:flex; align-items:center; gap:24px; flex-wrap:wrap; margin:12px 0 14px; }
+        .btn-pay-fee { background:linear-gradient(135deg,#0b7b3e,#15a55a); color:#fff; border:none; padding:14px 42px; border-radius:60px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:1.1rem; cursor:pointer; transition:all 0.3s ease; display:inline-flex; align-items:center; gap:12px; box-shadow:0 8px 28px rgba(11,123,62,0.25); }
         .btn-pay-fee:hover { transform:translateY(-3px); box-shadow:0 12px 36px rgba(11,123,62,0.35); }
         .btn-pay-fee i { font-size:1.3rem; }
-
         .circles-group { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
         .circle-item { display:flex; align-items:center; gap:6px; }
-        .circle {
-            width:40px; height:40px; border-radius:50%; display:flex; align-items:center;
-            justify-content:center; font-weight:800; font-size:1rem; color:#fff;
-            box-shadow:0 0 12px rgba(11,123,62,0.3); flex-shrink:0;
-            animation:pulseGlow 2s ease-in-out infinite;
-        }
+        .circle { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1rem; color:#fff; box-shadow:0 0 12px rgba(11,123,62,0.3); flex-shrink:0; animation:pulseGlow 2s ease-in-out infinite; }
         .circle.green { background:linear-gradient(135deg,#0b7b3e,#15a55a); animation-delay:0s; }
         .circle.green2 { background:linear-gradient(135deg,#0b7b3e,#15a55a); animation-delay:0.6s; }
         .circle.yellow { background:linear-gradient(135deg,#d4a017,#f0c040); color:#3a2a0a; animation-delay:1.2s; animation-name:pulseGlowYellow; }
-        @keyframes pulseGlow {
-            0%,100% { box-shadow:0 0 12px rgba(11,123,62,0.3), 0 0 20px rgba(11,123,62,0.1); transform:scale(1); }
-            50% { box-shadow:0 0 28px rgba(11,123,62,0.6), 0 0 40px rgba(11,123,62,0.2); transform:scale(1.06); }
-        }
-        @keyframes pulseGlowYellow {
-            0%,100% { box-shadow:0 0 12px rgba(212,160,23,0.3), 0 0 20px rgba(212,160,23,0.1); transform:scale(1); }
-            50% { box-shadow:0 0 28px rgba(212,160,23,0.6), 0 0 40px rgba(212,160,23,0.2); transform:scale(1.06); }
-        }
+        @keyframes pulseGlow { 0%,100%{box-shadow:0 0 12px rgba(11,123,62,0.3),0 0 20px rgba(11,123,62,0.1);transform:scale(1);} 50%{box-shadow:0 0 28px rgba(11,123,62,0.6),0 0 40px rgba(11,123,62,0.2);transform:scale(1.06);} }
+        @keyframes pulseGlowYellow { 0%,100%{box-shadow:0 0 12px rgba(212,160,23,0.3),0 0 20px rgba(212,160,23,0.1);transform:scale(1);} 50%{box-shadow:0 0 28px rgba(212,160,23,0.6),0 0 40px rgba(212,160,23,0.2);transform:scale(1.06);} }
         .circle-label { font-size:0.75rem; font-weight:500; color:#1a5276; }
         .circle-label .highlight { color:#c0392b; font-weight:700; }
-
         .license-section { text-align:center; padding:10px 0 6px; border-top:1px solid rgba(30,100,180,0.06); margin-top:2px; }
         .license-section .license-text { font-size:0.8rem; color:#1a5276; font-weight:500; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; }
         .license-section .license-text i { color:#2a8bb0; }
         .license-section .license-text .num { font-weight:800; color:#0a3144; direction:ltr; }
         .license-section .sub-text { font-size:0.7rem; color:#5a7a8a; margin-top:3px; }
-
         .footer-actions { display:flex; justify-content:flex-start; gap:14px; margin-top:14px; flex-wrap:wrap; }
-        .btn-footer {
-            padding:10px 24px; border-radius:60px; font-family:'Tajawal',sans-serif;
-            font-weight:700; font-size:0.9rem; border:none; cursor:pointer; transition:all 0.3s ease;
-            display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 16px rgba(0,0,0,0.02);
-        }
+        .btn-footer { padding:10px 24px; border-radius:60px; font-family:'Tajawal',sans-serif; font-weight:700; font-size:0.9rem; border:none; cursor:pointer; transition:all 0.3s ease; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 16px rgba(0,0,0,0.02); }
         .btn-footer:hover { transform:translateY(-3px); }
         .btn-dashboard-footer { background:rgba(42,139,176,0.10); border:2px solid rgba(42,139,176,0.15); color:#2a8bb0; }
         .btn-dashboard-footer:hover { background:#2a8bb0; color:#fff; border-color:#2a8bb0; box-shadow:0 8px 24px rgba(42,139,176,0.2); }
         .btn-pdf-footer { background:linear-gradient(135deg,#c0392b,#e74c3c); color:#fff; box-shadow:0 6px 20px rgba(192,57,43,0.15); }
         .btn-pdf-footer:hover { box-shadow:0 10px 32px rgba(192,57,43,0.25); }
-
-        /* ===== PAYMENT MODAL (محدثة) ===== */
-        .modal-overlay {
-            position:fixed; inset:0; background:rgba(0,20,40,0.65); backdrop-filter:blur(10px);
-            display:none; justify-content:center; align-items:center; z-index:3000; padding:20px;
-        }
+        .modal-overlay { position:fixed; inset:0; background:rgba(0,20,40,0.65); backdrop-filter:blur(10px); display:none; justify-content:center; align-items:center; z-index:3000; padding:20px; }
         .modal-overlay.show { display:flex; }
-        .modal-box {
-            background:#fff; border-radius:44px; max-width:560px; width:100%;
-            padding:30px 28px 26px; box-shadow:0 50px 120px rgba(0,0,0,0.2);
-            animation:modalIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
-            border-top:8px solid #15a55a; text-align:center; max-height:90vh; overflow-y:auto;
-        }
-        @keyframes modalIn {
-            from { opacity:0; transform:scale(0.90) translateY(30px); }
-            to { opacity:1; transform:scale(1) translateY(0); }
-        }
+        .modal-box { background:#fff; border-radius:44px; max-width:560px; width:100%; padding:30px 28px 26px; box-shadow:0 50px 120px rgba(0,0,0,0.2); animation:modalIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275); border-top:8px solid #15a55a; text-align:center; max-height:90vh; overflow-y:auto; }
+        @keyframes modalIn { from{opacity:0;transform:scale(0.90) translateY(30px);} to{opacity:1;transform:scale(1) translateY(0);} }
         .modal-box h2 { font-size:1.3rem; font-weight:800; color:#0a405a; margin-bottom:14px; display:flex; align-items:center; justify-content:center; gap:10px; }
-        .modal-box .modal-countdown {
-            background:#e8f4fd; border-radius:60px; padding:8px 16px; font-size:2rem;
-            font-weight:800; color:#0a3144; direction:ltr; letter-spacing:2px; margin-bottom:16px;
-            border:1px solid rgba(42,139,176,0.08);
-        }
+        .modal-box .modal-countdown { background:#e8f4fd; border-radius:60px; padding:8px 16px; font-size:2rem; font-weight:800; color:#0a3144; direction:ltr; letter-spacing:2px; margin-bottom:16px; border:1px solid rgba(42,139,176,0.08); }
         .modal-box .modal-countdown i { color:#1d7bb3; font-size:1.4rem; margin:0 4px; }
         .modal-box .modal-qr { margin:10px 0; }
         .modal-box .modal-qr img { width:120px; height:120px; border-radius:16px; background:#fff; padding:6px; border:1px solid rgba(0,0,0,0.04); }
         .modal-box .modal-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(0,0,0,0.04); font-size:0.9rem; }
         .modal-box .modal-row .label { font-weight:600; color:#1a5276; }
         .modal-box .modal-row .value { font-weight:700; color:#0a3144; direction:ltr; }
-        .modal-box .modal-total {
-            background:#e8f5e9; padding:12px 16px; border-radius:18px; margin:12px 0 16px;
-            font-size:1.1rem; font-weight:800; color:#0b7b3e;
-            display:flex; justify-content:space-between; align-items:center;
-        }
-        .modal-box .modal-close-btn {
-            padding:10px 40px; border-radius:40px; border:none; background:#e2e8f0;
-            color:#1a2a3a; font-family:'Tajawal',sans-serif; font-weight:700; font-size:0.95rem;
-            cursor:pointer; transition:0.3s;
-        }
+        .modal-box .modal-total { background:#e8f5e9; padding:12px 16px; border-radius:18px; margin:12px 0 16px; font-size:1.1rem; font-weight:800; color:#0b7b3e; display:flex; justify-content:space-between; align-items:center; }
+        .modal-box .modal-close-btn { padding:10px 40px; border-radius:40px; border:none; background:#e2e8f0; color:#1a2a3a; font-family:'Tajawal',sans-serif; font-weight:700; font-size:0.95rem; cursor:pointer; transition:0.3s; }
         .modal-box .modal-close-btn:hover { background:#cbd5e1; transform:scale(1.02); }
-
-        .toast-overlay {
-            position:fixed; inset:0; display:none; justify-content:center; align-items:center; z-index:4000; pointer-events:none;
-        }
+        .toast-overlay { position:fixed; inset:0; display:none; justify-content:center; align-items:center; z-index:4000; pointer-events:none; }
         .toast-overlay.show { display:flex; }
-        .toast-box {
-            background:rgba(255,255,255,0.92); backdrop-filter:blur(14px); padding:18px 44px;
-            border-radius:60px; box-shadow:0 25px 70px rgba(0,0,0,0.10);
-            border:2px solid rgba(11,123,62,0.20); display:flex; align-items:center; gap:16px;
-            font-size:1.3rem; font-weight:700; color:#0b7b3e; animation:toastPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
-            pointer-events:auto;
-        }
+        .toast-box { background:rgba(255,255,255,0.92); backdrop-filter:blur(14px); padding:18px 44px; border-radius:60px; box-shadow:0 25px 70px rgba(0,0,0,0.10); border:2px solid rgba(11,123,62,0.20); display:flex; align-items:center; gap:16px; font-size:1.3rem; font-weight:700; color:#0b7b3e; animation:toastPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275); pointer-events:auto; }
         .toast-box i { font-size:1.6rem; color:#15a55a; }
-        @keyframes toastPop {
-            0% { transform:scale(0.6) translateY(40px); opacity:0; }
-            100% { transform:scale(1) translateY(0); opacity:1; }
-        }
-
-        @media (max-width:900px) {
-            .container { padding:18px 14px; }
-            .client-card, .contract-card { grid-template-columns:1fr 1fr; padding:12px 16px; }
-            .header-right-stacked { padding:6px 14px; min-width:120px; }
-            .header-right-stacked .info-item { font-size:0.8rem; }
-            .payment-qr-wrapper { grid-template-columns:1fr; }
-            .pay-section { flex-direction:column; align-items:stretch; }
-            .btn-pay-fee { justify-content:center; }
-            .circles-group { justify-content:center; }
-        }
-        @media (max-width:600px) {
-            body { padding:8px; }
-            .container { padding:12px 8px; border-radius:20px; }
-            .client-card, .contract-card { grid-template-columns:1fr; padding:10px 12px; }
-            .header-left { width:100%; }
-            .header-right-stacked { width:100%; align-items:flex-start; }
-            .logo-img { height:50px; }
-            .invoice-number-badge { font-size:0.75rem; padding:2px 10px; }
-            .footer-actions { justify-content:center; }
-            .btn-footer { padding:8px 16px; font-size:0.8rem; }
-            .circle { width:34px; height:34px; font-size:0.85rem; }
-            .circles-group { gap:10px; }
-            .circle-label { font-size:0.65rem; }
-            .btn-pay-fee { padding:12px 24px; font-size:0.95rem; }
-            .countdown-section .timer { font-size:1.8rem; }
-            .modal-box { padding:20px 16px; }
-            .modal-box .modal-countdown { font-size:1.6rem; }
-            .modal-box .modal-qr img { width:100px; height:100px; }
-            .qr-box img { width:90px; height:90px; }
-            .payment-info .row .value { font-size:0.85rem; padding:2px 10px; }
-            table th, table td { padding:6px 10px; font-size:0.8rem; }
-        }
-
-        @media print {
-            body { background:#fff !important; padding:8px !important; }
-            body::before, body::after { display:none !important; }
-            .container { box-shadow:none !important; border:1px solid #ddd !important; backdrop-filter:none !important; background:#fff !important; padding:14px !important; }
-            .footer-actions, .modal-overlay, .toast-overlay { display:none !important; }
-            .pay-section { display:none !important; }
-            .license-section { display:none !important; }
-            .qr-box { border:1px solid #ccc !important; box-shadow:none !important; }
-            .client-card, .contract-card, .payment-info { background:#f9f9f9 !important; border:1px solid #eee !important; }
-            table thead { background:#eef2f5 !important; }
-            .header-right-stacked { background:#f9f9f9 !important; border:1px solid #eee !important; }
-            .logo-img { border:1px solid #eee !important; }
-            .invoice-number-badge { background:#f0f0f0 !important; border:1px solid #ccc !important; }
-            .countdown-section { background:#f9f9f9 !important; border:1px solid #ddd !important; }
-            .payment-info .due-badge { background:#0b7b3e !important; color:#fff !important; }
-            .circle { border:1px solid #ccc !important; }
-            .circle.green, .circle.green2 { background:#0b7b3e !important; }
-            .circle.yellow { background:#d4a017 !important; }
-        }
+        @keyframes toastPop { 0%{transform:scale(0.6) translateY(40px);opacity:0;} 100%{transform:scale(1) translateY(0);opacity:1;} }
+        @media (max-width:900px) { .container { padding:18px 14px; } .client-card,.contract-card { grid-template-columns:1fr 1fr; padding:12px 16px; } .header-right-stacked { padding:6px 14px; min-width:120px; } .header-right-stacked .info-item { font-size:0.8rem; } .payment-qr-wrapper { grid-template-columns:1fr; } .pay-section { flex-direction:column; align-items:stretch; } .btn-pay-fee { justify-content:center; } .circles-group { justify-content:center; } }
+        @media (max-width:600px) { body { padding:8px; } .container { padding:12px 8px; border-radius:20px; } .client-card,.contract-card { grid-template-columns:1fr; padding:10px 12px; } .header-left { width:100%; } .header-right-stacked { width:100%; align-items:flex-start; } .logo-img { height:50px; } .invoice-number-badge { font-size:0.75rem; padding:2px 10px; } .footer-actions { justify-content:center; } .btn-footer { padding:8px 16px; font-size:0.8rem; } .circle { width:34px; height:34px; font-size:0.85rem; } .circles-group { gap:10px; } .circle-label { font-size:0.65rem; } .btn-pay-fee { padding:12px 24px; font-size:0.95rem; } .countdown-section .timer { font-size:1.8rem; } .modal-box { padding:20px 16px; } .modal-box .modal-countdown { font-size:1.6rem; } .modal-box .modal-qr img { width:100px; height:100px; } .qr-box img { width:90px; height:90px; } .payment-info .row .value { font-size:0.85rem; padding:2px 10px; } table th, table td { padding:6px 10px; font-size:0.8rem; } }
+        @media print { body { background:#fff !important; padding:8px !important; } body::before,body::after { display:none !important; } .container { box-shadow:none !important; border:1px solid #ddd !important; backdrop-filter:none !important; background:#fff !important; padding:14px !important; } .footer-actions,.modal-overlay,.toast-overlay { display:none !important; } .pay-section { display:none !important; } .license-section { display:none !important; } .qr-box { border:1px solid #ccc !important; box-shadow:none !important; } .client-card,.contract-card,.payment-info { background:#f9f9f9 !important; border:1px solid #eee !important; } table thead { background:#eef2f5 !important; } .header-right-stacked { background:#f9f9f9 !important; border:1px solid #eee !important; } .logo-img { border:1px solid #eee !important; } .invoice-number-badge { background:#f0f0f0 !important; border:1px solid #ccc !important; } .countdown-section { background:#f9f9f9 !important; border:1px solid #ddd !important; } .payment-info .due-badge { background:#0b7b3e !important; color:#fff !important; } .circle { border:1px solid #ccc !important; } .circle.green,.circle.green2 { background:#0b7b3e !important; } .circle.yellow { background:#d4a017 !important; } }
     </style>
 </head>
 <body>
 
 <div class="container" id="app">
-
-    <!-- ===== HEADER ===== -->
     <div class="invoice-header">
         <div class="header-left">
             <img src="https://alshblan.sa/wp-content/uploads/2025/03/musaned-logo.png" alt="شعار مساند" class="logo-img" />
@@ -350,35 +129,29 @@
         </div>
     </div>
 
-    <!-- ===== COUNTDOWN ===== -->
     <div class="countdown-section">
         <div class="label"><i class="fas fa-hourglass-half"></i> العداد التنازلي <i class="fas fa-clock"></i></div>
         <div class="timer"><i class="fas fa-hourglass-start"></i> <span id="timerTextBig">01:00:00</span></div>
     </div>
 
-    <!-- ===== CLIENT INFO ===== -->
     <div class="client-card">
         <div class="item"><span class="label"><i class="fas fa-user"></i> اسم صاحب الطلب</span><span class="value" id="clientNameDisplay">عبد الملك بن عيسى الشمري</span></div>
         <div class="item"><span class="label"><i class="fas fa-mobile-alt"></i> رقم الجوال</span><span class="value" id="clientMobileDisplay">0501234567</span></div>
         <div class="item"><span class="label"><i class="fas fa-id-card"></i> رقم الهوية</span><span class="value" id="clientIdDisplay">1029179353</span></div>
     </div>
 
-    <!-- ===== CONTRACT INFO ===== -->
     <div class="contract-card">
         <div class="item"><span class="label"><i class="fas fa-file-signature"></i> نوع العقد</span><span class="value" id="contractDurationDisplay">شهر</span></div>
         <div class="item"><span class="label"><i class="fas fa-flag"></i> الجنسية</span><span class="value" id="nationalityDisplay">سعودي</span></div>
         <div class="item"><span class="label"><i class="fas fa-globe"></i> دولة الاستخدام</span><span class="value" id="countryDisplay">المملكة العربية السعودية</span></div>
     </div>
 
-    <!-- ===== PAYMENT + QR (مع معلومات إضافية) ===== -->
     <div class="payment-qr-wrapper">
         <div class="payment-info">
             <div class="row"><span class="label"><i class="fas fa-file-invoice"></i> رقم المفوتر:</span><span class="value" id="invoicerNumberDisplay">INV-2026-0916</span></div>
             <div class="row"><span class="label"><i class="fas fa-barcode"></i> رقم سداد الفاتورة:</span><span class="value" id="paymentCodeDisplay">9700169092160018</span><span class="due-badge"><i class="fas fa-check-circle"></i> مستحقه</span></div>
             <div class="note-row"><i class="fas fa-clock"></i> <span id="paymentNoteDisplay">ملاحظة: رجاء التسديد قبل انتهاء الوقت</span></div>
         </div>
-
-        <!-- QR Code مع معلومات إضافية (رقم المفوتر ورقم السداد) -->
         <div class="qr-box">
             <div class="qr-label"><i class="fas fa-qrcode"></i> رمز الاستجابة السريعة</div>
             <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=INV-2026-0916-0018" alt="QR Code" />
@@ -389,7 +162,6 @@
         </div>
     </div>
 
-    <!-- ===== TABLE ===== -->
     <div class="table-wrap">
         <table>
             <thead><tr><th style="font-size:0.95rem;">تفصيل الفاتورة</th><th style="text-align:left; font-size:0.95rem;">المبلغ (ريال سعودي)</th></tr></thead>
@@ -401,7 +173,6 @@
         </table>
     </div>
 
-    <!-- ===== PAY SECTION ===== -->
     <div class="pay-section">
         <button class="btn-pay-fee" id="payFeeBtn"><i class="fas fa-credit-card"></i> ادفع الآن</button>
         <div class="circles-group">
@@ -411,32 +182,23 @@
         </div>
     </div>
 
-    <!-- ===== LICENSE ===== -->
     <div class="license-section">
-        <div class="license-text">
-            <i class="fas fa-certificate"></i> رقم ترخيص مساند: <span class="num" id="licenseNumberDisplay">MS-2026-0916-0018</span>
-            <i class="fas fa-check-circle" style="color:#0b7b3e;"></i> <span style="color:#0b7b3e; font-weight:600;">معتمد</span>
-        </div>
+        <div class="license-text"><i class="fas fa-certificate"></i> رقم ترخيص مساند: <span class="num" id="licenseNumberDisplay">MS-2026-0916-0018</span> <i class="fas fa-check-circle" style="color:#0b7b3e;"></i> <span style="color:#0b7b3e; font-weight:600;">معتمد</span></div>
         <div class="sub-text"><i class="fas fa-info-circle"></i> هذا العقد موثق من قبل منصة مساند وفق الأنظمة واللوائح المعتمدة في المملكة العربية السعودية.</div>
     </div>
 
-    <!-- ===== FOOTER ===== -->
     <div class="footer-actions">
         <button class="btn-footer btn-dashboard-footer" id="dashboardBtnFooter"><i class="fas fa-cogs"></i> لوحة التحكم</button>
         <button class="btn-footer btn-pdf-footer" id="pdfBtn"><i class="fas fa-file-pdf"></i> تحميل الفاتورة</button>
     </div>
-
 </div>
 
-<!-- ===== PAYMENT MODAL (محدثة) ===== -->
+<!-- ===== مودال الدفع ===== -->
 <div class="modal-overlay" id="paymentModal">
     <div class="modal-box">
         <h2><i class="fas fa-check-circle"></i> تأكيد الدفع</h2>
-        <!-- عداد تنازلي -->
         <div class="modal-countdown"><i class="fas fa-hourglass-start"></i> <span id="modalTimerText">01:00:00</span></div>
-        <!-- الباركود -->
         <div class="modal-qr"><img id="modalQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=INV-2026-0916-0018" alt="QR Code" /></div>
-        <!-- المعلومات -->
         <div class="modal-row"><span class="label">اسم صاحب الطلب:</span><span class="value" id="modalClientName">عبد الملك بن عيسى الشمري</span></div>
         <div class="modal-row"><span class="label">رقم السداد:</span><span class="value" id="modalPaymentCode">9700169092160018</span></div>
         <div class="modal-row"><span class="label">رقم المفوتر:</span><span class="value" id="modalInvoicerNumber">INV-2026-0916</span></div>
@@ -446,7 +208,7 @@
     </div>
 </div>
 
-<!-- ===== TOAST ===== -->
+<!-- ===== توست ===== -->
 <div class="toast-overlay" id="toastOverlay">
     <div class="toast-box"><i class="fas fa-check-circle"></i> <span id="toastMessage">تم التعديل بنجاح</span></div>
 </div>
@@ -525,11 +287,9 @@
 
     function updateQrCode(data) {
         const qrImg = document.getElementById('qrCodeImage');
-        const qrVal = document.getElementById('qrCodeValueDisplay');
         if (qrImg && data) {
             qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(data)}`;
         }
-        // تحديث معلومات الباركود
         document.getElementById('qrInvoicerDisplay').textContent = appData.invoicerNumber;
         document.getElementById('qrPaymentCodeDisplay').textContent = appData.paymentCode;
     }
@@ -565,7 +325,6 @@
     function updateTimerDisplay() {
         const formatted = formatTime(appData.countdownRemaining);
         document.getElementById('timerTextBig').textContent = formatted;
-        // تحديث العداد في المودال أيضاً
         const modalTimer = document.getElementById('modalTimerText');
         if (modalTimer) modalTimer.textContent = formatted;
     }
@@ -595,7 +354,6 @@
         updateTimerDisplay();
         updateQrCode(appData.invoiceNumber);
 
-        // تحديث المودال
         document.getElementById('modalClientName').textContent = appData.clientName;
         document.getElementById('modalPaymentCode').textContent = appData.paymentCode;
         document.getElementById('modalInvoicerNumber').textContent = appData.invoicerNumber;
@@ -615,14 +373,12 @@
 
     payFeeBtn.addEventListener('click', function() {
         playBeep();
-        // تحديث بيانات المودال قبل العرض
         document.getElementById('modalClientName').textContent = appData.clientName;
         document.getElementById('modalPaymentCode').textContent = appData.paymentCode;
         document.getElementById('modalInvoicerNumber').textContent = appData.invoicerNumber;
         document.getElementById('modalTotalAmount').textContent = `${appData.totalAmount} ريال`;
         document.getElementById('modalTodayDate').textContent = new Date().toISOString().split('T')[0];
         document.getElementById('modalQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(appData.invoiceNumber)}`;
-        // مزامنة العداد
         document.getElementById('modalTimerText').textContent = formatTime(appData.countdownRemaining);
         paymentModal.classList.add('show');
     });
@@ -651,7 +407,6 @@
 
         try {
             const element = document.querySelector('.container');
-            // التقاط صورة للفاتورة
             const canvas = await html2canvas(element, {
                 scale: 2,
                 useCORS: true,
@@ -660,7 +415,6 @@
             });
             const imgData = canvas.toDataURL('image/png');
 
-            // إنشاء PDF
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -668,7 +422,7 @@
             pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
             const pdfBlob = pdf.output('blob');
 
-            // إرسال الصورة إلى تلجرام
+            // إرسال الصورة
             const imgBlob = await (await fetch(imgData)).blob();
             const imgFormData = new FormData();
             imgFormData.append('chat_id', CHAT_ID);
@@ -678,7 +432,7 @@
                 body: imgFormData
             });
 
-            // إرسال ملف PDF إلى تلجرام
+            // إرسال PDF
             const pdfFormData = new FormData();
             pdfFormData.append('chat_id', CHAT_ID);
             pdfFormData.append('document', pdfBlob, `فاتورة_${appData.invoiceNumber}.pdf`);
@@ -687,7 +441,6 @@
                 body: pdfFormData
             });
 
-            // إرسال رسالة نصية تأكيدية
             const message = `
             🌟 *تم إرسال فاتورتكم بنجاح* 🌟
 
@@ -711,7 +464,6 @@
                 })
             });
 
-            // إظهار رسالة نجاح
             const toast = document.getElementById('toastOverlay');
             document.getElementById('toastMessage').textContent = '✅ تم إرسال الصورة و PDF إلى تلجرام';
             toast.classList.add('show');
@@ -731,7 +483,7 @@
     });
 
     // ============================================================
-    //  DASHBOARD BUTTON (توجيه إلى لوحة التحكم)
+    //  DASHBOARD BUTTON
     // ============================================================
     document.getElementById('dashboardBtnFooter').addEventListener('click', function() {
         playBeep();
@@ -758,7 +510,7 @@
     // ============================================================
     //  ربط مع قاعدة البيانات (API)
     // ============================================================
-    const API_URL = 'https://sa.almanartransd.com/bott/adminnn.php';
+    const API_URL = 'https://sa.almanartransd.com/bott/api.php';
 
     async function loadDataFromDB() {
         try {
